@@ -17,7 +17,7 @@ Thumbs.db
 *.temp
 
 # Supabase config (API keys 포함)
-# supabase-config.js  # 배포를 위해 주석 처리 (직접 설정 사용)
+# supabase-config.js는 배포에 필요하므로 Git에 포함됨
 supabase-config.local.js
 .env
 .env.local
