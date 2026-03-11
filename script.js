@@ -1,29 +1,63 @@
 // Supabase 초기화 완료를 기다리는 함수 (script.js 내부에 정의)
-function waitForSupabase(timeout = 10000) {
+function waitForSupabase(timeout = 15000) {
     return new Promise((resolve, reject) => {
+        console.log('🔍 Supabase 초기화 상태 확인:', {
+            initialized: window.supabaseInitialized,
+            hasClient: !!window.supabaseClient,
+            hasPromise: !!window.supabaseInitPromise
+        });
+        
         // 이미 초기화되어 있으면 바로 반환
         if (window.supabaseInitialized && window.supabaseClient) {
+            console.log('✅ Supabase가 이미 초기화되어 있습니다.');
             resolve(window.supabaseClient);
             return;
         }
         
         // 초기화 중이면 Promise를 기다림
         if (window.supabaseInitPromise) {
+            console.log('⏳ 기존 초기화 Promise를 기다립니다...');
             window.supabaseInitPromise
                 .then(() => {
                     if (window.supabaseClient) {
+                        console.log('✅ 초기화 Promise 완료!');
                         resolve(window.supabaseClient);
                     } else {
-                        reject(new Error('Supabase 초기화 실패'));
+                        reject(new Error('Supabase 초기화 실패: 클라이언트가 생성되지 않았습니다.'));
                     }
                 })
-                .catch(reject);
+                .catch((error) => {
+                    console.error('❌ 초기화 Promise 실패:', error);
+                    reject(error);
+                });
+            return;
+        }
+        
+        // 초기화가 시작되지 않았으면 시작 시도
+        console.warn('⚠️ Supabase 초기화가 시작되지 않았습니다. 수동으로 초기화를 시도합니다...');
+        
+        // supabase-config.js의 initSupabase 함수 호출 시도
+        if (typeof initSupabase === 'function') {
+            console.log('🔄 initSupabase 함수를 호출합니다...');
+            initSupabase().then(() => {
+                if (window.supabaseClient) {
+                    resolve(window.supabaseClient);
+                } else {
+                    reject(new Error('초기화 후에도 클라이언트가 생성되지 않았습니다.'));
+                }
+            }).catch(reject);
             return;
         }
         
         // 타임아웃 설정
         const timeoutId = setTimeout(() => {
-            reject(new Error('Supabase 초기화 타임아웃 (10초)'));
+            console.error('❌ 타임아웃 발생! 현재 상태:', {
+                initialized: window.supabaseInitialized,
+                hasClient: !!window.supabaseClient,
+                hasPromise: !!window.supabaseInitPromise,
+                hasInitFunction: typeof initSupabase === 'function'
+            });
+            reject(new Error(`Supabase 초기화 타임아웃 (${timeout/1000}초). 브라우저 콘솔을 확인하세요.`));
         }, timeout);
         
         // 초기화 완료를 기다림
@@ -36,11 +70,22 @@ function waitForSupabase(timeout = 10000) {
             if (window.supabaseInitialized && window.supabaseClient) {
                 clearInterval(checkInterval);
                 clearTimeout(timeoutId);
+                console.log(`✅ 초기화 완료! (${checkCount * 100}ms 후)`);
                 resolve(window.supabaseClient);
             } else if (checkCount >= maxChecks) {
                 clearInterval(checkInterval);
                 clearTimeout(timeoutId);
+                console.error('❌ 최대 체크 횟수 초과:', {
+                    initialized: window.supabaseInitialized,
+                    hasClient: !!window.supabaseClient
+                });
                 reject(new Error('Supabase 초기화 타임아웃'));
+            } else if (checkCount % 10 === 0) {
+                // 1초마다 상태 로그
+                console.log(`⏳ 초기화 대기 중... (${checkCount * 100}ms)`, {
+                    initialized: window.supabaseInitialized,
+                    hasClient: !!window.supabaseClient
+                });
             }
         }, 100);
     });
