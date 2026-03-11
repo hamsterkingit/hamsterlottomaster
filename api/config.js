@@ -30,18 +30,40 @@ module.exports = (req, res) => {
     process.env.REACT_APP_SUPABASE_ANON_KEY ||
     process.env.SUPABASE_ANON_KEY;
   
+  // 디버깅 정보 (환경변수 존재 여부만 확인)
+  const envVars = {
+    NEXT_PUBLIC_SUPABASE_URL: !!process.env.NEXT_PUBLIC_SUPABASE_URL,
+    VITE_SUPABASE_URL: !!process.env.VITE_SUPABASE_URL,
+    REACT_APP_SUPABASE_URL: !!process.env.REACT_APP_SUPABASE_URL,
+    SUPABASE_URL: !!process.env.SUPABASE_URL,
+    NEXT_PUBLIC_SUPABASE_ANON_KEY: !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+    VITE_SUPABASE_ANON_KEY: !!process.env.VITE_SUPABASE_ANON_KEY,
+    REACT_APP_SUPABASE_ANON_KEY: !!process.env.REACT_APP_SUPABASE_ANON_KEY,
+    SUPABASE_ANON_KEY: !!process.env.SUPABASE_ANON_KEY
+  };
+  
   // 환경변수가 설정되지 않은 경우
   if (!supabaseUrl || !supabaseAnonKey) {
     return res.status(500).json({ 
       error: 'Supabase 환경변수가 설정되지 않았습니다.',
       message: 'Vercel 대시보드에서 환경변수를 설정해주세요.',
-      hint: '필요한 환경변수: NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY'
+      hint: '필요한 환경변수: NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY',
+      debug: {
+        foundUrl: !!supabaseUrl,
+        foundKey: !!supabaseAnonKey,
+        envVars: envVars
+      }
     });
   }
   
-  // 설정 반환
+  // 설정 반환 (디버깅 정보 포함)
   return res.status(200).json({
     supabaseUrl: supabaseUrl,
-    supabaseAnonKey: supabaseAnonKey
+    supabaseAnonKey: supabaseAnonKey,
+    debug: {
+      urlLength: supabaseUrl.length,
+      keyLength: supabaseAnonKey.length,
+      envVars: envVars
+    }
   });
 };
