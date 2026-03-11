@@ -64,39 +64,30 @@ async function saveToSupabase(numbers, bonusNumber) {
     try {
         console.log('💾 Supabase 저장 시도...', { numbers, bonusNumber });
         
-        // Supabase 클라이언트가 초기화되었는지 확인
-        if (!window.supabaseClient) {
-            console.warn('⚠️ Supabase가 아직 초기화되지 않았습니다. 잠시 후 다시 시도합니다...');
-            
-            // 최대 3번까지 재시도
-            let retryCount = 0;
-            const maxRetries = 3;
-            
-            const retrySave = async () => {
-                retryCount++;
-                console.log(`🔄 재시도 ${retryCount}/${maxRetries}...`);
-                
-                if (window.supabaseClient) {
-                    console.log('✅ Supabase 초기화 완료! 저장을 계속합니다...');
-                    await saveToSupabase(numbers, bonusNumber);
-                } else if (retryCount < maxRetries) {
-                    setTimeout(retrySave, 1000);
-                } else {
-                    console.error('❌ Supabase 초기화 실패 (최대 재시도 횟수 초과)');
-                    console.error('💡 해결 방법:');
-                    console.error('   1. 브라우저 콘솔(F12)에서 오류 메시지 확인');
-                    console.error('   2. Vercel 대시보드 → Settings → Environment Variables 확인');
-                    console.error('   3. NEXT_PUBLIC_SUPABASE_URL과 NEXT_PUBLIC_SUPABASE_ANON_KEY 설정 확인');
-                    alert('데이터베이스 연결에 실패했습니다.\n\n브라우저 콘솔(F12)을 열어 오류 메시지를 확인하세요.\n\nVercel 환경변수가 설정되어 있는지 확인해주세요.');
-                }
-            };
-            
-            setTimeout(retrySave, 1000);
+        // Supabase 초기화 완료를 기다림
+        let client;
+        try {
+            console.log('⏳ Supabase 초기화 완료 대기 중...');
+            client = await window.waitForSupabase(10000); // 10초 타임아웃
+            console.log('✅ Supabase 초기화 완료! 저장을 진행합니다...');
+        } catch (error) {
+            console.error('❌ Supabase 초기화 실패:', error);
+            console.error('💡 해결 방법:');
+            console.error('   1. 브라우저 콘솔(F12)에서 오류 메시지 확인');
+            console.error('   2. Vercel 대시보드 → Settings → Environment Variables 확인');
+            console.error('   3. NEXT_PUBLIC_SUPABASE_URL과 NEXT_PUBLIC_SUPABASE_ANON_KEY 설정 확인');
+            console.error('   4. 환경변수 설정 후 반드시 Redeploy 실행');
+            alert('데이터베이스 연결에 실패했습니다.\n\n브라우저 콘솔(F12)을 열어 오류 메시지를 확인하세요.\n\nVercel 환경변수가 설정되어 있는지 확인해주세요.');
+            return;
+        }
+        
+        if (!client) {
+            console.error('❌ Supabase 클라이언트를 가져올 수 없습니다.');
             return;
         }
 
         console.log('📤 데이터베이스에 저장 중...');
-        const { data, error } = await window.supabaseClient
+        const { data, error } = await client
             .from('lotto_numbers')
             .insert([
                 {
