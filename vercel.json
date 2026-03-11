@@ -1,4 +1,9 @@
 {
+  "functions": {
+    "api/config.js": {
+      "memory": 1024
+    }
+  },
   "rewrites": [
     {
       "source": "/api/config",
