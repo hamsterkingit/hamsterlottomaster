@@ -1,3 +1,51 @@
+// Supabase 초기화 완료를 기다리는 함수 (script.js 내부에 정의)
+function waitForSupabase(timeout = 10000) {
+    return new Promise((resolve, reject) => {
+        // 이미 초기화되어 있으면 바로 반환
+        if (window.supabaseInitialized && window.supabaseClient) {
+            resolve(window.supabaseClient);
+            return;
+        }
+        
+        // 초기화 중이면 Promise를 기다림
+        if (window.supabaseInitPromise) {
+            window.supabaseInitPromise
+                .then(() => {
+                    if (window.supabaseClient) {
+                        resolve(window.supabaseClient);
+                    } else {
+                        reject(new Error('Supabase 초기화 실패'));
+                    }
+                })
+                .catch(reject);
+            return;
+        }
+        
+        // 타임아웃 설정
+        const timeoutId = setTimeout(() => {
+            reject(new Error('Supabase 초기화 타임아웃 (10초)'));
+        }, timeout);
+        
+        // 초기화 완료를 기다림
+        let checkCount = 0;
+        const maxChecks = timeout / 100; // 100ms 간격으로 체크
+        
+        const checkInterval = setInterval(() => {
+            checkCount++;
+            
+            if (window.supabaseInitialized && window.supabaseClient) {
+                clearInterval(checkInterval);
+                clearTimeout(timeoutId);
+                resolve(window.supabaseClient);
+            } else if (checkCount >= maxChecks) {
+                clearInterval(checkInterval);
+                clearTimeout(timeoutId);
+                reject(new Error('Supabase 초기화 타임아웃'));
+            }
+        }, 100);
+    });
+}
+
 // 로또 번호 생성 함수
 function generateLottoNumbers() {
     const numbers = [];
@@ -67,24 +115,8 @@ async function saveToSupabase(numbers, bonusNumber) {
         // Supabase 초기화 완료를 기다림
         let client;
         try {
-            // waitForSupabase 함수가 로드될 때까지 기다림
-            if (typeof window.waitForSupabase !== 'function') {
-                console.warn('⚠️ waitForSupabase 함수가 아직 로드되지 않았습니다. 잠시 기다립니다...');
-                
-                // 최대 2초 동안 함수가 로드될 때까지 기다림
-                let waitCount = 0;
-                while (typeof window.waitForSupabase !== 'function' && waitCount < 20) {
-                    await new Promise(resolve => setTimeout(resolve, 100));
-                    waitCount++;
-                }
-                
-                if (typeof window.waitForSupabase !== 'function') {
-                    throw new Error('waitForSupabase 함수를 찾을 수 없습니다. supabase-config.js가 로드되었는지 확인하세요.');
-                }
-            }
-            
             console.log('⏳ Supabase 초기화 완료 대기 중...');
-            client = await window.waitForSupabase(10000); // 10초 타임아웃
+            client = await waitForSupabase(10000); // 10초 타임아웃
             console.log('✅ Supabase 초기화 완료! 저장을 진행합니다...');
         } catch (error) {
             console.error('❌ Supabase 초기화 실패:', error);
