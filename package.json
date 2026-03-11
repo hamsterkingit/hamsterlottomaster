@@ -1,6 +1,5 @@
 {
   "name": "hamsterlottomaster",
   "version": "1.0.0",
-  "description": "VIP 로또 번호 생성기",
-  "type": "module"
+  "description": "VIP 로또 번호 생성기"
 }

@@ -1,7 +1,7 @@
 // Vercel 서버리스 함수: Supabase 설정 제공
 // 이 함수는 Vercel 환경변수에서 Supabase 설정을 읽어서 반환합니다.
 
-export default function handler(req, res) {
+module.exports = (req, res) => {
   // CORS 헤더 설정
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
@@ -18,7 +18,6 @@ export default function handler(req, res) {
   }
   
   // Vercel 환경변수에서 Supabase 설정 읽기
-  // 여러 환경변수 이름을 시도 (다양한 프레임워크 지원)
   const supabaseUrl = 
     process.env.NEXT_PUBLIC_SUPABASE_URL || 
     process.env.VITE_SUPABASE_URL || 
@@ -45,4 +44,4 @@ export default function handler(req, res) {
     supabaseUrl: supabaseUrl,
     supabaseAnonKey: supabaseAnonKey
   });
-}
+};
