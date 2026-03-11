@@ -198,11 +198,37 @@ async function saveToSupabase(numbers, bonusNumber) {
                 hint: error.hint,
                 code: error.code
             });
-            alert('저장 중 오류가 발생했습니다: ' + error.message);
+            
+            // 구체적인 오류 메시지 제공
+            let errorMsg = '저장 중 오류가 발생했습니다.\n\n';
+            if (error.code === 'PGRST116') {
+                errorMsg += '테이블이 존재하지 않습니다.\nSupabase에서 테이블을 생성해주세요.';
+            } else if (error.code === '42501') {
+                errorMsg += '권한이 없습니다.\nRLS 정책을 확인해주세요.';
+            } else {
+                errorMsg += error.message;
+            }
+            
+            alert(errorMsg);
         } else {
             console.log('✅ Supabase에 저장 완료:', data);
-            // 저장 성공 시 시각적 피드백 (선택사항)
-            // alert('번호가 데이터베이스에 저장되었습니다!');
+            console.log('📊 저장된 데이터:', {
+                id: data[0]?.id,
+                numbers: data[0]?.numbers,
+                bonus_number: data[0]?.bonus_number,
+                created_at: data[0]?.created_at
+            });
+            
+            // 저장 성공 시 시각적 피드백
+            const generateBtn = document.getElementById('generateBtn');
+            const originalText = generateBtn.querySelector('.btn-text').textContent;
+            generateBtn.querySelector('.btn-text').textContent = '✅ 저장 완료!';
+            generateBtn.style.background = 'linear-gradient(135deg, #10b981, #059669)';
+            
+            setTimeout(() => {
+                generateBtn.querySelector('.btn-text').textContent = originalText;
+                generateBtn.style.background = '';
+            }, 2000);
         }
     } catch (err) {
         console.error('❌ 저장 중 예외 발생:', err);
