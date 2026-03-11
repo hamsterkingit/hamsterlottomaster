@@ -59,6 +59,36 @@ function displayNumbers(numbers, bonusNumber) {
     }, 700);
 }
 
+// Supabase에 로또 번호 저장
+async function saveToSupabase(numbers, bonusNumber) {
+    try {
+        // Supabase 클라이언트가 초기화되었는지 확인
+        if (typeof supabase === 'undefined') {
+            console.warn('Supabase가 설정되지 않았습니다. supabase-config.js를 확인하세요.');
+            return;
+        }
+
+        const { data, error } = await supabase
+            .from('lotto_numbers')
+            .insert([
+                {
+                    numbers: numbers,
+                    bonus_number: bonusNumber
+                }
+            ])
+            .select();
+
+        if (error) {
+            console.error('Supabase 저장 오류:', error);
+            alert('저장 중 오류가 발생했습니다: ' + error.message);
+        } else {
+            console.log('Supabase에 저장 완료:', data);
+        }
+    } catch (err) {
+        console.error('저장 중 예외 발생:', err);
+    }
+}
+
 // 히스토리에 추가
 function addToHistory(numbers, bonusNumber) {
     const history = document.getElementById('history');
@@ -163,10 +193,12 @@ document.addEventListener('DOMContentLoaded', () => {
     displayReferenceData();
     
     // 번호 생성 버튼
-    generateBtn.addEventListener('click', () => {
+    generateBtn.addEventListener('click', async () => {
         const { numbers, bonusNumber } = generateLottoNumbers();
         displayNumbers(numbers, bonusNumber);
         addToHistory(numbers, bonusNumber);
+        // Supabase에 저장
+        await saveToSupabase(numbers, bonusNumber);
     });
     
     // 초기화 버튼
