@@ -99,14 +99,23 @@ function clearAll() {
     document.getElementById('history').innerHTML = '<div class="empty-state">아직 생성된 번호가 없습니다.</div>';
 }
 
-// 이전 3개월 로또 1등 당첨 번호 데이터 (참고용 샘플 데이터)
+// 이전 3개월 로또 1등 당첨 번호 데이터 (참고용 샘플 데이터 - 주 1회씩 12주)
 const previousWinningNumbers = [
-    { date: '2025년 12월', numbers: [7, 12, 18, 23, 31, 42], bonus: 15 },
-    { date: '2026년 1월', numbers: [3, 9, 16, 25, 33, 40], bonus: 11 },
-    { date: '2026년 2월', numbers: [5, 14, 21, 28, 35, 44], bonus: 19 }
+    { date: '2025.12.07', numbers: [7, 12, 18, 23, 31, 42], bonus: 15 },
+    { date: '2025.12.14', numbers: [3, 9, 16, 25, 33, 40], bonus: 11 },
+    { date: '2025.12.21', numbers: [5, 14, 21, 28, 35, 44], bonus: 19 },
+    { date: '2025.12.28', numbers: [2, 11, 17, 26, 32, 41], bonus: 8 },
+    { date: '2026.01.04', numbers: [4, 13, 19, 27, 34, 43], bonus: 6 },
+    { date: '2026.01.11', numbers: [1, 10, 20, 29, 36, 45], bonus: 14 },
+    { date: '2026.01.18', numbers: [6, 15, 22, 30, 37, 38], bonus: 9 },
+    { date: '2026.01.25', numbers: [8, 16, 24, 31, 39, 42], bonus: 12 },
+    { date: '2026.02.01', numbers: [3, 11, 18, 25, 33, 40], bonus: 7 },
+    { date: '2026.02.08', numbers: [5, 14, 21, 28, 35, 44], bonus: 13 },
+    { date: '2026.02.15', numbers: [2, 9, 17, 26, 32, 41], bonus: 10 },
+    { date: '2026.02.22', numbers: [4, 12, 19, 27, 34, 43], bonus: 16 }
 ];
 
-// 참고 데이터 표시 함수
+// 참고 데이터 표시 함수 (한 줄로 표시)
 function displayReferenceData() {
     const referenceContainer = document.getElementById('referenceData');
     referenceContainer.innerHTML = '';

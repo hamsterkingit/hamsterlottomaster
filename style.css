@@ -306,6 +306,7 @@ button {
     margin-top: 30px;
     border: 3px solid #C19A6B;
     box-shadow: inset 0 0 20px rgba(193, 154, 107, 0.2);
+    width: 100%;
 }
 
 .reference-section h3 {
@@ -318,8 +319,30 @@ button {
 
 .reference-data {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     gap: 15px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-bottom: 10px;
+    -webkit-overflow-scrolling: touch;
+}
+
+.reference-data::-webkit-scrollbar {
+    height: 8px;
+}
+
+.reference-data::-webkit-scrollbar-track {
+    background: #F5E6D3;
+    border-radius: 10px;
+}
+
+.reference-data::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #D4A574 0%, #8B7355 100%);
+    border-radius: 10px;
+}
+
+.reference-data::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, #8B7355 0%, #654321 100%);
 }
 
 .reference-item {
@@ -329,22 +352,26 @@ button {
     border: 2px solid #C19A6B;
     box-shadow: 0 2px 8px rgba(139, 115, 85, 0.2);
     animation: slideIn 0.3s ease-out;
+    flex-shrink: 0;
+    min-width: 280px;
+    display: flex;
+    flex-direction: column;
 }
 
 .reference-date {
     color: #8B4513;
     font-weight: 600;
-    font-size: 1.1em;
-    margin-bottom: 12px;
+    font-size: 0.95em;
+    margin-bottom: 10px;
     text-align: center;
 }
 
 .reference-numbers {
     display: flex;
-    gap: 10px;
+    gap: 8px;
     justify-content: center;
-    flex-wrap: wrap;
-    margin-bottom: 10px;
+    flex-wrap: nowrap;
+    margin-bottom: 8px;
 }
 
 .reference-bonus {
@@ -352,30 +379,31 @@ button {
     justify-content: center;
     align-items: center;
     gap: 8px;
-    margin-top: 10px;
-    padding-top: 10px;
+    margin-top: 8px;
+    padding-top: 8px;
     border-top: 2px dashed #C19A6B;
 }
 
 .reference-bonus::before {
     content: '보너스';
     color: #8B4513;
-    font-size: 0.9em;
+    font-size: 0.85em;
     font-weight: 600;
 }
 
 .reference-number {
-    width: 45px;
-    height: 45px;
+    width: 38px;
+    height: 38px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.2em;
+    font-size: 1em;
     font-weight: bold;
     color: white;
     border: 2px solid rgba(139, 115, 85, 0.5);
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    flex-shrink: 0;
 }
 
 .reference-number.low {
@@ -427,22 +455,15 @@ footer {
 /* 반응형 디자인 */
 @media (min-width: 900px) {
     .container {
-        flex-direction: row;
-        align-items: flex-start;
-        gap: 30px;
+        flex-direction: column;
     }
 
     main {
-        max-width: 600px;
+        max-width: 100%;
     }
 
     .reference-section {
-        position: sticky;
-        top: 20px;
-        max-width: 350px;
-        flex-shrink: 0;
-        max-height: calc(100vh - 40px);
-        overflow-y: auto;
+        width: 100%;
     }
 }
 
