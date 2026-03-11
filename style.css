@@ -41,12 +41,21 @@ body::before {
         0 0 0 3px #8B7355,
         inset 0 0 30px rgba(193, 154, 107, 0.2);
     padding: 40px;
-    max-width: 600px;
+    max-width: 1200px;
     width: 100%;
     animation: fadeIn 0.5s ease-in;
     position: relative;
     z-index: 1;
     border: 4px solid #C19A6B;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1;
+    max-width: 600px;
+    margin: 0 auto;
+    width: 100%;
 }
 
 @keyframes fadeIn {
@@ -290,6 +299,97 @@ button {
     font-weight: 600;
 }
 
+.reference-section {
+    background: linear-gradient(135deg, #FFF8DC 0%, #F5E6D3 100%);
+    border-radius: 15px;
+    padding: 25px;
+    margin-top: 30px;
+    border: 3px solid #C19A6B;
+    box-shadow: inset 0 0 20px rgba(193, 154, 107, 0.2);
+}
+
+.reference-section h3 {
+    color: #8B4513;
+    margin-bottom: 20px;
+    font-size: 1.3em;
+    text-align: center;
+    font-weight: 600;
+}
+
+.reference-data {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.reference-item {
+    background: linear-gradient(135deg, #F5E6D3 0%, #E8D5B7 100%);
+    border-radius: 12px;
+    padding: 15px;
+    border: 2px solid #C19A6B;
+    box-shadow: 0 2px 8px rgba(139, 115, 85, 0.2);
+    animation: slideIn 0.3s ease-out;
+}
+
+.reference-date {
+    color: #8B4513;
+    font-weight: 600;
+    font-size: 1.1em;
+    margin-bottom: 12px;
+    text-align: center;
+}
+
+.reference-numbers {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+}
+
+.reference-bonus {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 2px dashed #C19A6B;
+}
+
+.reference-bonus::before {
+    content: '보너스';
+    color: #8B4513;
+    font-size: 0.9em;
+    font-weight: 600;
+}
+
+.reference-number {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2em;
+    font-weight: bold;
+    color: white;
+    border: 2px solid rgba(139, 115, 85, 0.5);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.reference-number.low {
+    background: linear-gradient(135deg, #D4A574 0%, #C19A6B 100%);
+}
+
+.reference-number.mid {
+    background: linear-gradient(135deg, #8B7355 0%, #654321 100%);
+}
+
+.reference-number.high {
+    background: linear-gradient(135deg, #CD853F 0%, #A0522D 100%);
+}
+
 footer {
     text-align: center;
     margin-top: 30px;
@@ -325,6 +425,27 @@ footer {
 }
 
 /* 반응형 디자인 */
+@media (min-width: 900px) {
+    .container {
+        flex-direction: row;
+        align-items: flex-start;
+        gap: 30px;
+    }
+
+    main {
+        max-width: 600px;
+    }
+
+    .reference-section {
+        position: sticky;
+        top: 20px;
+        max-width: 350px;
+        flex-shrink: 0;
+        max-height: calc(100vh - 40px);
+        overflow-y: auto;
+    }
+}
+
 @media (max-width: 600px) {
     .container {
         padding: 20px;
@@ -346,5 +467,11 @@ footer {
 
     button {
         width: 100%;
+    }
+
+    .reference-number {
+        width: 40px;
+        height: 40px;
+        font-size: 1em;
     }
 }

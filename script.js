@@ -99,6 +99,51 @@ function clearAll() {
     document.getElementById('history').innerHTML = '<div class="empty-state">아직 생성된 번호가 없습니다.</div>';
 }
 
+// 이전 3개월 로또 1등 당첨 번호 데이터 (참고용 샘플 데이터)
+const previousWinningNumbers = [
+    { date: '2025년 12월', numbers: [7, 12, 18, 23, 31, 42], bonus: 15 },
+    { date: '2026년 1월', numbers: [3, 9, 16, 25, 33, 40], bonus: 11 },
+    { date: '2026년 2월', numbers: [5, 14, 21, 28, 35, 44], bonus: 19 }
+];
+
+// 참고 데이터 표시 함수
+function displayReferenceData() {
+    const referenceContainer = document.getElementById('referenceData');
+    referenceContainer.innerHTML = '';
+    
+    previousWinningNumbers.forEach((item, index) => {
+        const referenceItem = document.createElement('div');
+        referenceItem.className = 'reference-item';
+        
+        const dateLabel = document.createElement('div');
+        dateLabel.className = 'reference-date';
+        dateLabel.textContent = item.date;
+        
+        const numbersDiv = document.createElement('div');
+        numbersDiv.className = 'reference-numbers';
+        
+        item.numbers.forEach(num => {
+            const ball = document.createElement('div');
+            ball.className = `reference-number ${getNumberClass(num)}`;
+            ball.textContent = num;
+            numbersDiv.appendChild(ball);
+        });
+        
+        const bonusDiv = document.createElement('div');
+        bonusDiv.className = 'reference-bonus';
+        const bonusBall = document.createElement('div');
+        bonusBall.className = `reference-number ${getNumberClass(item.bonus)}`;
+        bonusBall.textContent = item.bonus;
+        bonusDiv.appendChild(bonusBall);
+        
+        referenceItem.appendChild(dateLabel);
+        referenceItem.appendChild(numbersDiv);
+        referenceItem.appendChild(bonusDiv);
+        
+        referenceContainer.appendChild(referenceItem);
+    });
+}
+
 // 이벤트 리스너
 document.addEventListener('DOMContentLoaded', () => {
     const generateBtn = document.getElementById('generateBtn');
@@ -106,6 +151,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // 초기 상태 설정
     clearAll();
+    displayReferenceData();
     
     // 번호 생성 버튼
     generateBtn.addEventListener('click', () => {
