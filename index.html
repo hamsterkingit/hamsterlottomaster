@@ -3,65 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>몬스터 로또 번호 생성기</title>
-    <meta name="version" content="2026-03-11-v2">
+    <title>LOTTO PLAYER</title>
+    <meta name="version" content="2026-03-11-v3">
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="monster-bg"></div>
-    <div class="container">
-        <header>
-            <h1 class="main-title">
-                <span class="monster-title">🎲 몬스터</span>
-                <span class="title-cute">로또 번호 생성기</span>
-            </h1>
-            <p class="subtitle">귀여운 몬스터들과 함께 행운을 잡아봐요! 🎉</p>
-        </header>
-
-        <main>
-            <div class="controls">
-                <button id="generateBtn" class="generate-btn">
-                    <span class="btn-text">🎲 번호 생성하기</span>
-                    <span class="btn-shine"></span>
-                </button>
-                <button id="clearBtn" class="clear-btn">초기화</button>
+    <div class="game-container">
+        <!-- Player Profile Section -->
+        <div class="profile-box">
+            <div class="trainer-sprite">👤</div>
+            <div class="profile-info">
+                <div class="profile-label">TRAINER</div>
+                <div class="profile-number">No. 00001</div>
+                <div class="profile-title">LOTTO PLAYER</div>
             </div>
+        </div>
 
-            <div id="resultContainer" class="result-container">
-                <div class="result-label">
-                    <span class="label-glow">추천 번호</span>
-                </div>
-                <div id="numbers" class="numbers"></div>
-                <div id="bonusContainer" class="bonus-container" style="display: none;">
-                    <div class="bonus-label">
-                        <span class="label-glow">보너스 번호</span>
-                    </div>
-                    <div id="bonusNumber" class="bonus-number"></div>
-                </div>
+        <!-- Number Generation Section -->
+        <div class="generation-box">
+            <div class="set-count">
+                <span>SET COUNT:</span>
+                <input type="number" id="setCount" value="1" min="1" max="10">
             </div>
+            <button id="generateBtn" class="fight-btn">
+                <span class="play-icon">►</span>FIGHT
+            </button>
+            <div id="generationMessage" class="generation-message"></div>
+        </div>
 
-            <div class="history-section">
-                <h3 class="section-title">
-                    <span class="title-border">생성 기록</span>
-                </h3>
-                <div id="history" class="history"></div>
+        <!-- Current Set Display -->
+        <div class="current-set-box" id="currentSetBox" style="display: none;">
+            <div class="set-header">
+                <span class="set-label">세트 1</span>
+                <span class="set-numbers" id="currentSetNumbers"></span>
             </div>
-        </main>
+            <div class="pokemon-frames" id="currentPokemonFrames"></div>
+        </div>
 
-        <aside class="reference-section">
-            <h3 class="section-title">
-                <span class="title-border">이전 3개월 1등 당첨 번호</span>
-            </h3>
-            <div id="referenceData" class="reference-data"></div>
-        </aside>
+        <!-- Saved Numbers Section -->
+        <div class="saved-box">
+            <div class="section-title">SAVED NUMBERS</div>
+            <div id="savedNumbers" class="saved-numbers-container"></div>
+            <div class="pagination" id="pagination" style="display: none;">
+                <button class="page-btn" id="prevPage">◄</button>
+                <span class="page-info" id="pageInfo">1 / 1</span>
+                <button class="page-btn" id="nextPage">►</button>
+            </div>
+        </div>
 
-        <footer>
-            <p class="disclaimer">※ 본 서비스는 참고용이며, 실제 당첨을 보장하지 않습니다.</p>
-            <p style="font-size: 0.7em; color: rgba(255,255,255,0.3); margin-top: 10px;">v2026-03-11-v2</p>
-        </footer>
+        <!-- Recent Winners Section -->
+        <div class="winners-box">
+            <div class="section-title">RECENT WINNERS</div>
+            <div id="recentWinners" class="winners-container"></div>
+        </div>
     </div>
 
     <!-- Supabase 클라이언트 라이브러리 -->
