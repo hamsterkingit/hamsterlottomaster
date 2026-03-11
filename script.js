@@ -62,13 +62,26 @@ function displayNumbers(numbers, bonusNumber) {
 // Supabase에 로또 번호 저장
 async function saveToSupabase(numbers, bonusNumber) {
     try {
+        console.log('💾 Supabase 저장 시도...', { numbers, bonusNumber });
+        
         // Supabase 클라이언트가 초기화되었는지 확인
-        if (typeof supabase === 'undefined') {
-            console.warn('Supabase가 설정되지 않았습니다. supabase-config.js를 확인하세요.');
+        if (!window.supabaseClient) {
+            console.warn('⚠️ Supabase가 아직 초기화되지 않았습니다. 잠시 후 다시 시도합니다...');
+            
+            // 1초 후 다시 시도
+            setTimeout(async () => {
+                if (window.supabaseClient) {
+                    await saveToSupabase(numbers, bonusNumber);
+                } else {
+                    console.error('❌ Supabase 초기화 실패. Vercel 환경변수를 확인하세요.');
+                    alert('데이터베이스 연결에 실패했습니다. 브라우저 콘솔을 확인하세요.');
+                }
+            }, 1000);
             return;
         }
 
-        const { data, error } = await supabase
+        console.log('📤 데이터베이스에 저장 중...');
+        const { data, error } = await window.supabaseClient
             .from('lotto_numbers')
             .insert([
                 {
@@ -79,13 +92,23 @@ async function saveToSupabase(numbers, bonusNumber) {
             .select();
 
         if (error) {
-            console.error('Supabase 저장 오류:', error);
+            console.error('❌ Supabase 저장 오류:', error);
+            console.error('오류 상세:', {
+                message: error.message,
+                details: error.details,
+                hint: error.hint,
+                code: error.code
+            });
             alert('저장 중 오류가 발생했습니다: ' + error.message);
         } else {
-            console.log('Supabase에 저장 완료:', data);
+            console.log('✅ Supabase에 저장 완료:', data);
+            // 저장 성공 시 시각적 피드백 (선택사항)
+            // alert('번호가 데이터베이스에 저장되었습니다!');
         }
     } catch (err) {
-        console.error('저장 중 예외 발생:', err);
+        console.error('❌ 저장 중 예외 발생:', err);
+        console.error('예외 상세:', err.stack);
+        alert('저장 중 예상치 못한 오류가 발생했습니다: ' + err.message);
     }
 }
 
