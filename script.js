@@ -67,6 +67,22 @@ async function saveToSupabase(numbers, bonusNumber) {
         // Supabase 초기화 완료를 기다림
         let client;
         try {
+            // waitForSupabase 함수가 로드될 때까지 기다림
+            if (typeof window.waitForSupabase !== 'function') {
+                console.warn('⚠️ waitForSupabase 함수가 아직 로드되지 않았습니다. 잠시 기다립니다...');
+                
+                // 최대 2초 동안 함수가 로드될 때까지 기다림
+                let waitCount = 0;
+                while (typeof window.waitForSupabase !== 'function' && waitCount < 20) {
+                    await new Promise(resolve => setTimeout(resolve, 100));
+                    waitCount++;
+                }
+                
+                if (typeof window.waitForSupabase !== 'function') {
+                    throw new Error('waitForSupabase 함수를 찾을 수 없습니다. supabase-config.js가 로드되었는지 확인하세요.');
+                }
+            }
+            
             console.log('⏳ Supabase 초기화 완료 대기 중...');
             client = await window.waitForSupabase(10000); // 10초 타임아웃
             console.log('✅ Supabase 초기화 완료! 저장을 진행합니다...');
