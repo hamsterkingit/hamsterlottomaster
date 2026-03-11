@@ -17,9 +17,19 @@ const supabaseAnonKey =
   process.env.SUPABASE_ANON_KEY || 
   '';
 
-// supabase-config.js 파일 읽기
+// supabase-config.js 파일 읽기 (파일이 없어도 빌드가 실패하지 않도록)
 const configPath = path.join(__dirname, 'supabase-config.js');
-let configContent = fs.readFileSync(configPath, 'utf8');
+let configContent = '';
+try {
+    if (fs.existsSync(configPath)) {
+        configContent = fs.readFileSync(configPath, 'utf8');
+    } else {
+        console.warn('⚠️ supabase-config.js 파일을 찾을 수 없습니다. 기존 파일을 유지합니다.');
+    }
+} catch (error) {
+    console.warn('⚠️ supabase-config.js 파일을 읽을 수 없습니다:', error.message);
+    console.warn('기존 파일을 유지합니다.');
+}
 
 // 환경변수가 있으면 주입
 if (supabaseUrl && supabaseAnonKey) {

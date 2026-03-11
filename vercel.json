@@ -1,4 +1,6 @@
 {
+  "buildCommand": "npm run build || echo 'Build skipped'",
+  "outputDirectory": ".",
   "functions": {
     "api/config.js": {
       "memory": 1024
