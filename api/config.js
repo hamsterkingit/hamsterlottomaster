@@ -1,7 +1,7 @@
 // Vercel 서버리스 함수: Supabase 설정 제공
 // 이 함수는 Vercel 환경변수에서 Supabase 설정을 읽어서 반환합니다.
 
-module.exports = function handler(req, res) {
+export default function handler(req, res) {
   // CORS 헤더 설정
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
