@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>로또 번호 추천 서비스</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🦁 사파리 로또 🦒</h1>
+            <p>야생의 행운을 찾아보세요!</p>
+        </header>
+
+        <main>
+            <div class="controls">
+                <button id="generateBtn" class="generate-btn">🔍 번호 탐색하기</button>
+                <button id="clearBtn" class="clear-btn">초기화</button>
+            </div>
+
+            <div id="resultContainer" class="result-container">
+                <div class="result-label">추천 번호</div>
+                <div id="numbers" class="numbers"></div>
+                <div id="bonusContainer" class="bonus-container" style="display: none;">
+                    <div class="bonus-label">보너스 번호</div>
+                    <div id="bonusNumber" class="bonus-number"></div>
+                </div>
+            </div>
+
+            <div class="history-section">
+                <h3>📸 탐색 기록</h3>
+                <div id="history" class="history"></div>
+            </div>
+        </main>
+
+        <footer>
+            <p>※ 이 서비스는 참고용이며, 실제 당첨을 보장하지 않습니다.</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
