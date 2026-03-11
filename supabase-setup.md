@@ -11,29 +11,26 @@
 
 ## 2단계: 테이블 생성
 
-Supabase 대시보드에서 SQL Editor로 이동 후 다음 SQL 실행:
+Supabase 대시보드에서 **SQL Editor**로 이동 후 다음 중 하나를 선택하세요:
 
-```sql
--- 로또 번호 저장 테이블 생성
-CREATE TABLE lotto_numbers (
-  id BIGSERIAL PRIMARY KEY,
-  numbers INTEGER[] NOT NULL,  -- 메인 번호 6개 배열
-  bonus_number INTEGER NOT NULL,  -- 보너스 번호
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-);
+### 간단한 버전 (추천)
+`supabase-table-simple.sql` 파일의 내용을 복사해서 실행하세요.
+- 기본 테이블 생성
+- 인덱스 및 RLS 설정
+- 빠르고 간단함
 
--- 인덱스 추가 (조회 성능 향상)
-CREATE INDEX idx_lotto_created_at ON lotto_numbers(created_at DESC);
+### 상세한 버전
+`supabase-table.sql` 파일의 내용을 복사해서 실행하세요.
+- 데이터 검증 함수 포함
+- 자동 업데이트 트리거
+- 더 엄격한 데이터 검증
+- 주석 및 설명 포함
 
--- Row Level Security (RLS) 설정 (선택사항)
-ALTER TABLE lotto_numbers ENABLE ROW LEVEL SECURITY;
-
--- 모든 사용자가 읽고 쓸 수 있도록 정책 설정 (개발용)
-CREATE POLICY "Allow all operations" ON lotto_numbers
-  FOR ALL
-  USING (true)
-  WITH CHECK (true);
-```
+**실행 방법:**
+1. Supabase 대시보드 → SQL Editor
+2. "New query" 클릭
+3. SQL 파일 내용 복사 & 붙여넣기
+4. "Run" 버튼 클릭
 
 ## 3단계: API 키 확인
 
