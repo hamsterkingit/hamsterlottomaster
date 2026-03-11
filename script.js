@@ -279,4 +279,88 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // 초기 표시
     displaySavedNumbers();
+    displayRecentWinners();
 });
+
+// 최근 당첨자 데이터 (이전 3개월 1등 당첨 번호 - 샘플 데이터)
+const previousWinningNumbers = [
+    { date: '2025.12.07', numbers: [7, 12, 18, 23, 31, 42], bonus: 15 },
+    { date: '2025.12.14', numbers: [3, 9, 16, 25, 33, 40], bonus: 11 },
+    { date: '2025.12.21', numbers: [5, 14, 21, 28, 35, 44], bonus: 19 },
+    { date: '2025.12.28', numbers: [2, 11, 17, 26, 32, 41], bonus: 8 },
+    { date: '2026.01.04', numbers: [1, 8, 15, 22, 29, 38], bonus: 13 },
+    { date: '2026.01.11', numbers: [4, 10, 19, 27, 34, 43], bonus: 6 },
+    { date: '2026.01.18', numbers: [6, 13, 20, 24, 30, 39], bonus: 14 },
+    { date: '2026.01.25', numbers: [9, 16, 21, 28, 35, 45], bonus: 7 },
+    { date: '2026.02.01', numbers: [3, 11, 18, 25, 32, 41], bonus: 12 },
+    { date: '2026.02.08', numbers: [5, 14, 19, 26, 33, 42], bonus: 9 },
+    { date: '2026.02.15', numbers: [2, 10, 17, 24, 31, 40], bonus: 16 },
+    { date: '2026.02.22', numbers: [4, 12, 20, 27, 34, 43], bonus: 5 }
+];
+
+// 최근 당첨자 표시
+function displayRecentWinners() {
+    const container = document.getElementById('recentWinners');
+    container.innerHTML = '';
+    
+    if (previousWinningNumbers.length === 0) {
+        container.innerHTML = '<div style="text-align: center; color: #2d5016; font-size: 10px; padding: 20px;">당첨 정보가 없습니다.</div>';
+        return;
+    }
+    
+    // 최근 3개만 표시
+    const recentWinners = previousWinningNumbers.slice(0, 3);
+    
+    recentWinners.forEach(winner => {
+        const winnerSet = document.createElement('div');
+        winnerSet.className = 'saved-set';
+        winnerSet.style.marginBottom = '15px';
+        
+        const date = document.createElement('div');
+        date.className = 'saved-timestamp';
+        date.textContent = winner.date;
+        
+        const frames = document.createElement('div');
+        frames.className = 'saved-pokemon-frames';
+        
+        winner.numbers.forEach(num => {
+            const frame = document.createElement('div');
+            frame.className = 'pokemon-frame';
+            
+            const sprite = document.createElement('div');
+            sprite.className = 'pokemon-sprite';
+            sprite.textContent = getPokemonEmoji(num);
+            
+            const number = document.createElement('div');
+            number.className = 'pokemon-number';
+            number.textContent = num;
+            
+            frame.appendChild(sprite);
+            frame.appendChild(number);
+            frames.appendChild(frame);
+        });
+        
+        // 보너스 번호
+        const bonusFrame = document.createElement('div');
+        bonusFrame.className = 'pokemon-frame';
+        bonusFrame.style.border = '3px solid #ff6b6b';
+        
+        const bonusSprite = document.createElement('div');
+        bonusSprite.className = 'pokemon-sprite';
+        bonusSprite.textContent = getPokemonEmoji(winner.bonus);
+        bonusSprite.style.background = '#ff6b6b';
+        
+        const bonusNumber = document.createElement('div');
+        bonusNumber.className = 'pokemon-number';
+        bonusNumber.textContent = `+${winner.bonus}`;
+        bonusNumber.style.color = '#ff6b6b';
+        
+        bonusFrame.appendChild(bonusSprite);
+        bonusFrame.appendChild(bonusNumber);
+        frames.appendChild(bonusFrame);
+        
+        winnerSet.appendChild(date);
+        winnerSet.appendChild(frames);
+        container.appendChild(winnerSet);
+    });
+}

@@ -291,8 +291,9 @@ body {
 .winners-container {
     color: #2d5016;
     font-size: 10px;
-    text-align: center;
-    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
 }
 
 /* Pokemon Sprites Mapping */
